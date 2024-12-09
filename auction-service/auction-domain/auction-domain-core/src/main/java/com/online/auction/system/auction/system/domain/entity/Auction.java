@@ -14,8 +14,9 @@ public class Auction extends AggregateRoot<AuctionId> {
     private final String title;
     private final String description;
     private final LocalDateTime startTime;
+    private final Money startPrice;
 
-    private AuctionStatus status;
+    private AuctionStatus auctionStatus;
     private Money highestBid;
     private List<String> FailureMessages;
     private LocalDateTime endTime;
@@ -27,11 +28,20 @@ public class Auction extends AggregateRoot<AuctionId> {
         title = builder.title;
         description = builder.description;
         startTime = builder.startTime;
-        status = builder.status;
+        startPrice = builder.startPrice;
+        auctionStatus = builder.auctionStatus;
         highestBid = builder.highestBid;
         FailureMessages = builder.FailureMessages;
         endTime = builder.endTime;
     }
+
+
+    public void initializeAuction(){
+        setId(new AuctionId(UUID.randomUUID()));
+        auctionStatus = AuctionStatus.ACTIVE;
+    }
+
+
 
 
     public PaymentId getPaymentId() {
@@ -54,8 +64,8 @@ public class Auction extends AggregateRoot<AuctionId> {
         return startTime;
     }
 
-    public AuctionStatus getStatus() {
-        return status;
+    public AuctionStatus getAuctionStatus() {
+        return auctionStatus;
     }
 
     public Money getHighestBid() {
@@ -77,7 +87,8 @@ public class Auction extends AggregateRoot<AuctionId> {
         private String title;
         private String description;
         private LocalDateTime startTime;
-        private AuctionStatus status;
+        private Money startPrice;
+        private AuctionStatus auctionStatus;
         private Money highestBid;
         private List<String> FailureMessages;
         private LocalDateTime endTime;
@@ -85,7 +96,7 @@ public class Auction extends AggregateRoot<AuctionId> {
         private Builder() {
         }
 
-        public static Builder Builder() {
+        public static Builder builder() {
             return new Builder();
         }
 
@@ -119,8 +130,13 @@ public class Auction extends AggregateRoot<AuctionId> {
             return this;
         }
 
-        public Builder status(AuctionStatus val) {
-            status = val;
+        public Builder startPrice(Money val) {
+            startPrice = val;
+            return this;
+        }
+
+        public Builder auctionStatus(AuctionStatus val) {
+            auctionStatus = val;
             return this;
         }
 

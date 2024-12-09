@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class AuctionId extends BaseId<UUID> {
 
-    protected AuctionId(UUID value) {
+    public AuctionId(UUID value) {
         super(value);
     }
 }
