@@ -11,6 +11,11 @@
 
     <artifactId>auction-messaging</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>com.online.auction</groupId>
+            <artifactId>auction-application-service</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

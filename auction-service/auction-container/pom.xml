@@ -11,6 +11,27 @@
 
     <artifactId>auction-container</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>com.online.auction</groupId>
+            <artifactId>auction-domain-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.online.auction</groupId>
+            <artifactId>auction-application-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.online.auction</groupId>
+            <artifactId>auction-application</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.online.auction</groupId>
+            <artifactId>auction-dataaccess</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.online.auction</groupId>
+            <artifactId>auction-messaging</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

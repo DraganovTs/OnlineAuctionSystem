@@ -26,7 +26,31 @@
 
     <dependencyManagement>
         <dependencies>
-
+            <dependency>
+                <groupId>com.online.auction</groupId>
+                <artifactId>auction-domain-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.online.auction</groupId>
+                <artifactId>auction-application-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.online.auction</groupId>
+                <artifactId>auction-application</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.online.auction</groupId>
+                <artifactId>auction-dataaccess</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.online.auction</groupId>
+                <artifactId>auction-messaging</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

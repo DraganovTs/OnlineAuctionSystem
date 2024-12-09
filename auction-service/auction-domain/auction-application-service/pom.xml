@@ -11,6 +11,11 @@
 
     <artifactId>auction-application-service</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>com.online.auction</groupId>
+            <artifactId>auction-domain-core</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
