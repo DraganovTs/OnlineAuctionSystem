@@ -1,5 +1,6 @@
 package com.online.auction.system.auction.system.domain.entity;
 
+import com.online.auction.system.auction.system.domain.exception.OrderDomainException;
 import com.online.auction.system.common.domain.entity.AggregateRoot;
 import com.online.auction.system.common.domain.valueobject.*;
 
@@ -18,7 +19,7 @@ public class Auction extends AggregateRoot<AuctionId> {
 
     private AuctionStatus auctionStatus;
     private Money highestBid;
-    private List<String> FailureMessages;
+    private List<String> failureMessages;
     private LocalDateTime endTime;
 
     private Auction(Builder builder) {
@@ -31,18 +32,91 @@ public class Auction extends AggregateRoot<AuctionId> {
         startPrice = builder.startPrice;
         auctionStatus = builder.auctionStatus;
         highestBid = builder.highestBid;
-        FailureMessages = builder.FailureMessages;
+        failureMessages = builder.FailureMessages;
         endTime = builder.endTime;
     }
 
 
-    public void initializeAuction(){
+    public void initializeAuction() {
         setId(new AuctionId(UUID.randomUUID()));
         auctionStatus = AuctionStatus.ACTIVE;
+        highestBid = startPrice;
+    }
+
+    public void validateAuction() {
+        validateInitialAuction();
+        validateStartingPrice();
+    }
+
+    public void placeBid(Money bid) {
+        validateBid(bid);
+        highestBid = bid;
+    }
+
+    public void bid() {
+        if (auctionStatus != AuctionStatus.ACTIVE) {
+            throw new OrderDomainException("Auction is not in correct state for bid operation!");
+        }
+        auctionStatus = AuctionStatus.PENDING;
+    }
+
+    public void approve() {
+        if (auctionStatus != AuctionStatus.PENDING) {
+            throw new OrderDomainException("Auction is not in correct state for approve operation!");
+        }
+        auctionStatus = AuctionStatus.APPROVED;
+    }
+
+    public void initCancel(List<String> failureMessages) {
+        if (auctionStatus != AuctionStatus.PENDING) {
+            throw new OrderDomainException("Auction is not in correct state for initCancel operation!");
+        }
+        auctionStatus = AuctionStatus.CANCELLING;
+        updateFailureMessages(failureMessages);
     }
 
 
+    public void cancel(List<String> failureMessages) {
+        if (auctionStatus == AuctionStatus.CANCELLING || auctionStatus == AuctionStatus.ACTIVE) {
+            throw new OrderDomainException("Auction is not in correct state for cancel operation!");
+        }
+        auctionStatus = AuctionStatus.CANCELLED;
+        updateFailureMessages(failureMessages);
+    }
 
+    public void close() {
+        if (auctionStatus != AuctionStatus.APPROVED && auctionStatus != AuctionStatus.ACTIVE) {
+            throw new OrderDomainException("Auction is not in correct state for close operation!");
+        }
+        auctionStatus = AuctionStatus.CLOSED;
+    }
+
+    private void updateFailureMessages(List<String> failureMessages) {
+        if (this.failureMessages != null && failureMessages != null) {
+            this.failureMessages.addAll(failureMessages.stream().filter(message -> !message.isEmpty()).toList());
+        }
+        if (this.failureMessages == null) {
+            this.failureMessages = failureMessages;
+        }
+    }
+
+    private void validateInitialAuction() {
+        if (auctionStatus != null || getId() == null) {
+            throw new OrderDomainException("Auction is not in correct state for initialization");
+        }
+    }
+
+    private void validateStartingPrice() {
+        if (startPrice == null || !startPrice.isGreaterThanZero()) {
+            throw new OrderDomainException("Auction start price must be greater than zero");
+        }
+    }
+
+    private void validateBid(Money bid) {
+        if (bid == null || !bid.isGreaterThanZero() || startPrice.isGreaterThan(bid) || highestBid.isGreaterThan(bid)) {
+            throw new OrderDomainException("Auction bid must be greater than zero");
+        }
+    }
 
     public PaymentId getPaymentId() {
         return paymentId;
@@ -73,7 +147,7 @@ public class Auction extends AggregateRoot<AuctionId> {
     }
 
     public List<String> getFailureMessages() {
-        return FailureMessages;
+        return failureMessages;
     }
 
     public LocalDateTime getEndTime() {
