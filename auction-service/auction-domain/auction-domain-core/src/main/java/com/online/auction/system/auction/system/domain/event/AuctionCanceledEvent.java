@@ -4,10 +4,9 @@ import com.online.auction.system.auction.system.domain.entity.Auction;
 
 import java.time.LocalDateTime;
 
-public class AuctionCancelEvent extends AuctionEvent {
+public class AuctionCanceledEvent extends AuctionEvent {
 
-
-    public AuctionCancelEvent(Auction auction, LocalDateTime createdAt) {
+    public AuctionCanceledEvent(Auction auction, LocalDateTime createdAt) {
         super(auction, createdAt);
     }
 }

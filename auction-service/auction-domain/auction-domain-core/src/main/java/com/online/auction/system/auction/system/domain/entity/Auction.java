@@ -50,6 +50,7 @@ public class Auction extends AggregateRoot<AuctionId> {
 
     public void placeBid(Money bid) {
         validateBid(bid);
+        bid();
         highestBid = bid;
     }
 
