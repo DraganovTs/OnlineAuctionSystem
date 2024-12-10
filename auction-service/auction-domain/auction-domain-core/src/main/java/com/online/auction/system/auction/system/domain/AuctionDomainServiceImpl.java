@@ -20,14 +20,14 @@ public class AuctionDomainServiceImpl implements AuctionDomainService {
     public AuctionCreatedEvent validateAndInitiateAuction(Auction auction) {
         auction.validateAuction();
         auction.initializeAuction();
-        log.info("Auction whit id: {} is initialized.", auction.getId().getValue());
+        log.info(AUCTION_WHIT_ID + "initialized.", auction.getId().getValue());
         return new AuctionCreatedEvent(auction, LocalDateTime.now());
     }
 
     @Override
     public AuctionBidPlacedEvent placeBid(Auction auction, Money bid) {
         auction.placeBid(bid);
-        log.info("Auction whit id: {} is placed bid.", auction.getId().getValue());
+        log.info(AUCTION_WHIT_ID + "placed bid.", auction.getId().getValue());
         return new AuctionBidPlacedEvent(auction, LocalDateTime.now());
     }
 

@@ -14,9 +14,9 @@ public class Auction extends AggregateRoot<AuctionId> {
     private final UserId userId;
     private final String title;
     private final String description;
-    private final LocalDateTime startTime;
     private final Money startPrice;
 
+    private LocalDateTime startTime;
     private AuctionStatus auctionStatus;
     private Money highestBid;
     private List<String> failureMessages;
@@ -28,7 +28,6 @@ public class Auction extends AggregateRoot<AuctionId> {
         userId = builder.userId;
         title = builder.title;
         description = builder.description;
-        startTime = builder.startTime;
         startPrice = builder.startPrice;
         auctionStatus = builder.auctionStatus;
         highestBid = builder.highestBid;
@@ -40,6 +39,7 @@ public class Auction extends AggregateRoot<AuctionId> {
     public void initializeAuction() {
         setId(new AuctionId(UUID.randomUUID()));
         auctionStatus = AuctionStatus.ACTIVE;
+        startTime = LocalDateTime.now();
         highestBid = startPrice;
     }
 
@@ -65,6 +65,7 @@ public class Auction extends AggregateRoot<AuctionId> {
         if (auctionStatus != AuctionStatus.PENDING) {
             throw new OrderDomainException("Auction is not in correct state for approve operation!");
         }
+        endTime = LocalDateTime.now();
         auctionStatus = AuctionStatus.APPROVED;
     }
 
@@ -89,6 +90,7 @@ public class Auction extends AggregateRoot<AuctionId> {
         if (auctionStatus != AuctionStatus.APPROVED && auctionStatus != AuctionStatus.ACTIVE) {
             throw new OrderDomainException("Auction is not in correct state for close operation!");
         }
+        endTime = LocalDateTime.now();
         auctionStatus = AuctionStatus.CLOSED;
     }
 
@@ -161,7 +163,6 @@ public class Auction extends AggregateRoot<AuctionId> {
         private UserId userId;
         private String title;
         private String description;
-        private LocalDateTime startTime;
         private Money startPrice;
         private AuctionStatus auctionStatus;
         private Money highestBid;
@@ -197,11 +198,6 @@ public class Auction extends AggregateRoot<AuctionId> {
 
         public Builder description(String val) {
             description = val;
-            return this;
-        }
-
-        public Builder startTime(LocalDateTime val) {
-            startTime = val;
             return this;
         }
 
