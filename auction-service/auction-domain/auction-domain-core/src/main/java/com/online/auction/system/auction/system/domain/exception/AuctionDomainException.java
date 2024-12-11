@@ -2,14 +2,14 @@ package com.online.auction.system.auction.system.domain.exception;
 
 import com.online.auction.system.common.domain.exception.DomainException;
 
-public class OrderDomainException extends DomainException {
+public class AuctionDomainException extends DomainException {
 
 
-    public OrderDomainException(String message) {
+    public AuctionDomainException(String message) {
         super(message);
     }
 
-    public OrderDomainException(String message, Throwable cause) {
+    public AuctionDomainException(String message, Throwable cause) {
         super(message, cause);
     }
 }

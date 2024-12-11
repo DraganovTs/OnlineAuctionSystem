@@ -1,6 +1,6 @@
 package com.online.auction.system.auction.system.domain.entity;
 
-import com.online.auction.system.auction.system.domain.exception.OrderDomainException;
+import com.online.auction.system.auction.system.domain.exception.AuctionDomainException;
 import com.online.auction.system.common.domain.entity.AggregateRoot;
 import com.online.auction.system.common.domain.valueobject.*;
 
@@ -56,14 +56,14 @@ public class Auction extends AggregateRoot<AuctionId> {
 
     public void bid() {
         if (auctionStatus != AuctionStatus.ACTIVE) {
-            throw new OrderDomainException("Auction is not in correct state for bid operation!");
+            throw new AuctionDomainException("Auction is not in correct state for bid operation!");
         }
         auctionStatus = AuctionStatus.PENDING;
     }
 
     public void approve() {
         if (auctionStatus != AuctionStatus.PENDING) {
-            throw new OrderDomainException("Auction is not in correct state for approve operation!");
+            throw new AuctionDomainException("Auction is not in correct state for approve operation!");
         }
         endTime = LocalDateTime.now();
         auctionStatus = AuctionStatus.APPROVED;
@@ -71,7 +71,7 @@ public class Auction extends AggregateRoot<AuctionId> {
 
     public void initCancel(List<String> failureMessages) {
         if (auctionStatus != AuctionStatus.PENDING) {
-            throw new OrderDomainException("Auction is not in correct state for initCancel operation!");
+            throw new AuctionDomainException("Auction is not in correct state for initCancel operation!");
         }
         auctionStatus = AuctionStatus.CANCELLING;
         updateFailureMessages(failureMessages);
@@ -80,7 +80,7 @@ public class Auction extends AggregateRoot<AuctionId> {
 
     public void cancel(List<String> failureMessages) {
         if (auctionStatus == AuctionStatus.CANCELLING || auctionStatus == AuctionStatus.ACTIVE) {
-            throw new OrderDomainException("Auction is not in correct state for cancel operation!");
+            throw new AuctionDomainException("Auction is not in correct state for cancel operation!");
         }
         auctionStatus = AuctionStatus.CANCELLED;
         updateFailureMessages(failureMessages);
@@ -88,7 +88,7 @@ public class Auction extends AggregateRoot<AuctionId> {
 
     public void close() {
         if (auctionStatus != AuctionStatus.APPROVED && auctionStatus != AuctionStatus.ACTIVE) {
-            throw new OrderDomainException("Auction is not in correct state for close operation!");
+            throw new AuctionDomainException("Auction is not in correct state for close operation!");
         }
         endTime = LocalDateTime.now();
         auctionStatus = AuctionStatus.CLOSED;
@@ -105,19 +105,19 @@ public class Auction extends AggregateRoot<AuctionId> {
 
     private void validateInitialAuction() {
         if (auctionStatus != null || getId() == null) {
-            throw new OrderDomainException("Auction is not in correct state for initialization");
+            throw new AuctionDomainException("Auction is not in correct state for initialization");
         }
     }
 
     private void validateStartingPrice() {
         if (startPrice == null || !startPrice.isGreaterThanZero()) {
-            throw new OrderDomainException("Auction start price must be greater than zero");
+            throw new AuctionDomainException("Auction start price must be greater than zero");
         }
     }
 
     private void validateBid(Money bid) {
         if (bid == null || !bid.isGreaterThanZero() || startPrice.isGreaterThan(bid) || highestBid.isGreaterThan(bid)) {
-            throw new OrderDomainException("Auction bid must be greater than zero");
+            throw new AuctionDomainException("Auction bid must be greater than zero");
         }
     }
 
@@ -157,6 +157,11 @@ public class Auction extends AggregateRoot<AuctionId> {
         return endTime;
     }
 
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static final class Builder {
         private AuctionId auctionId;
         private PaymentId paymentId;
@@ -172,9 +177,6 @@ public class Auction extends AggregateRoot<AuctionId> {
         private Builder() {
         }
 
-        public static Builder builder() {
-            return new Builder();
-        }
 
         public Builder auctionId(AuctionId val) {
             auctionId = val;
