@@ -3,14 +3,9 @@ package com.online.auction.system.auction.service.domain;
 import com.online.auction.system.auction.service.domain.dto.create.CreateAuctionCommand;
 import com.online.auction.system.auction.service.domain.dto.create.CreateAuctionResponse;
 import com.online.auction.system.auction.service.domain.mapper.AuctionDataMapper;
-import com.online.auction.system.auction.service.domain.ports.output.repository.AuctionRepository;
-import com.online.auction.system.auction.service.domain.ports.output.repository.PaymentRepository;
-import com.online.auction.system.auction.service.domain.ports.output.repository.UserRepository;
-import com.online.auction.system.auction.system.domain.AuctionDomainService;
-import com.online.auction.system.auction.system.domain.entity.Payment;
-import com.online.auction.system.auction.system.domain.entity.User;
-import com.online.auction.system.auction.system.domain.exception.AuctionDomainException;
-import com.online.auction.system.common.domain.valueobject.PaymentId;
+import com.online.auction.system.auction.service.domain.ports.output.message.publisher.messages.AuctionCreatedMessageRequestMessagePublisher;
+import com.online.auction.system.auction.system.domain.entity.Auction;
+import com.online.auction.system.auction.system.domain.event.AuctionCreatedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,43 +17,25 @@ import java.util.UUID;
 @Component
 public class AuctionCreateCommandHandler {
 
-    private final AuctionDomainService auctionDomainService;
-    private final AuctionRepository auctionRepository;
-    private final UserRepository userRepository;
-    private final PaymentRepository paymentRepository;
+
+    private final AuctionCreateHelper auctionCreateHelper;
     private final AuctionDataMapper auctionDataMapper;
+    private final AuctionCreatedMessageRequestMessagePublisher auctionCreatedMessageRequestMessagePublisher;
 
-    public AuctionCreateCommandHandler(AuctionDomainService auctionDomainService,
-                                       AuctionRepository auctionRepository, UserRepository userRepository,
-                                       PaymentRepository paymentRepository, AuctionDataMapper auctionDataMapper) {
-        this.auctionDomainService = auctionDomainService;
-        this.auctionRepository = auctionRepository;
-        this.userRepository = userRepository;
-        this.paymentRepository = paymentRepository;
+    public AuctionCreateCommandHandler(AuctionCreateHelper auctionCreateHelper, AuctionDataMapper auctionDataMapper,
+                                       AuctionCreatedMessageRequestMessagePublisher auctionCreatedMessageRequestMessagePublisher) {
+        this.auctionCreateHelper = auctionCreateHelper;
         this.auctionDataMapper = auctionDataMapper;
+        this.auctionCreatedMessageRequestMessagePublisher = auctionCreatedMessageRequestMessagePublisher;
     }
 
-    @Transactional
+
     public CreateAuctionResponse createAuction(CreateAuctionCommand createAuctionCommand) {
-        checkUser(createAuctionCommand.getUserId());
-        Payment payment = checkPayment(createAuctionCommand.getPaymentId());
-        return null;
+        AuctionCreatedEvent auctionCreatedEvent = auctionCreateHelper.persistAuction(createAuctionCommand);
+        log.info("Auction is created whit id: {} " ,auctionCreatedEvent.getAuction().getId());
+        auctionCreatedMessageRequestMessagePublisher.publish(auctionCreatedEvent);
+        return auctionDataMapper.auctionToCreateAuctionResponse(auctionCreatedEvent.getAuction());
     }
 
-    private Payment checkPayment(UUID paymentId) {
 
-        //TODO create logic for initial payment
-        return Payment.Builder.builder()
-                .paymentId(new PaymentId(UUID.randomUUID()))
-                .completed(true)
-                .build();
-    }
-
-    private void checkUser(UUID userId) {
-       Optional<User> user = userRepository.findUser(userId);
-       if (user.isEmpty()) {
-           log.warn("Could not find customer with id {}", userId);
-           throw new AuctionDomainException("Could not find customer with id " + userId);
-       }
-    }
 }
