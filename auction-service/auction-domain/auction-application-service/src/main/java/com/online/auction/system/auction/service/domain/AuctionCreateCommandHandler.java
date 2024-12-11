@@ -4,14 +4,11 @@ import com.online.auction.system.auction.service.domain.dto.create.CreateAuction
 import com.online.auction.system.auction.service.domain.dto.create.CreateAuctionResponse;
 import com.online.auction.system.auction.service.domain.mapper.AuctionDataMapper;
 import com.online.auction.system.auction.service.domain.ports.output.message.publisher.messages.AuctionCreatedMessageRequestMessagePublisher;
-import com.online.auction.system.auction.system.domain.entity.Auction;
 import com.online.auction.system.auction.system.domain.event.AuctionCreatedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-import java.util.UUID;
+
 
 @Slf4j
 @Component
