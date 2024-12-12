@@ -7,12 +7,10 @@ import com.online.auction.system.auction.service.domain.ports.output.repository.
 import com.online.auction.system.auction.service.domain.ports.output.repository.UserRepository;
 import com.online.auction.system.auction.system.domain.AuctionDomainService;
 import com.online.auction.system.auction.system.domain.entity.Auction;
-import com.online.auction.system.auction.system.domain.entity.Payment;
 import com.online.auction.system.auction.system.domain.entity.User;
 import com.online.auction.system.auction.system.domain.event.AuctionBidPlacedEvent;
 import com.online.auction.system.auction.system.domain.exception.AuctionDomainException;
 import com.online.auction.system.common.domain.valueobject.Money;
-import com.online.auction.system.common.domain.valueobject.PaymentId;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,15 +23,11 @@ public class AuctionPlaceBidHelper {
     private final AuctionDomainService auctionDomainService;
     private final AuctionRepository auctionRepository;
     private final UserRepository userRepository;
-    private final PaymentRepository paymentRepository;
-    private final AuctionDataMapper auctionDataMapper;
 
-    public AuctionPlaceBidHelper(AuctionDomainService auctionDomainService, AuctionRepository auctionRepository, UserRepository userRepository, PaymentRepository paymentRepository, AuctionDataMapper auctionDataMapper) {
+    public AuctionPlaceBidHelper(AuctionDomainService auctionDomainService, AuctionRepository auctionRepository, UserRepository userRepository) {
         this.auctionDomainService = auctionDomainService;
         this.auctionRepository = auctionRepository;
         this.userRepository = userRepository;
-        this.paymentRepository = paymentRepository;
-        this.auctionDataMapper = auctionDataMapper;
     }
 
     @Transactional
