@@ -3,6 +3,7 @@ package com.online.auction.system.auction.service.domain.mapper;
 
 import com.online.auction.system.auction.service.domain.dto.create.CreateAuctionCommand;
 import com.online.auction.system.auction.service.domain.dto.create.CreateAuctionResponse;
+import com.online.auction.system.auction.service.domain.dto.create.PlaceAuctionBidResponse;
 import com.online.auction.system.auction.system.domain.entity.Auction;
 import com.online.auction.system.common.domain.valueobject.Money;
 import com.online.auction.system.common.domain.valueobject.PaymentId;
@@ -31,4 +32,12 @@ public class AuctionDataMapper {
                 .build();
     }
 
+
+    public PlaceAuctionBidResponse auctionToPlaceAuctionBidResponse(Auction auction) {
+        return PlaceAuctionBidResponse.builder()
+                .title(auction.getTitle())
+                .message("Place auction bid successfully")
+                .failureMessages(auction.getFailureMessages())
+                .build();
+    }
 }

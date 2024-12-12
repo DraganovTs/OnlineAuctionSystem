@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 @Builder
@@ -13,7 +14,9 @@ import java.math.BigDecimal;
 public class PlaceAuctionBidCommand {
 
     @NotNull
-    private final String userId;
+    private final UUID userId;
+    @NotNull
+    private final UUID auctionId;
     @NotNull
     private final BigDecimal bid;
 }
