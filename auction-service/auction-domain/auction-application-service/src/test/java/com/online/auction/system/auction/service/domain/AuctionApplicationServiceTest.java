@@ -1,6 +1,7 @@
 package com.online.auction.system.auction.service.domain;
 
 import com.online.auction.system.auction.service.domain.dto.create.CreateAuctionCommand;
+import com.online.auction.system.auction.service.domain.dto.create.CreateAuctionResponse;
 import com.online.auction.system.auction.service.domain.mapper.AuctionDataMapper;
 import com.online.auction.system.auction.service.domain.ports.input.service.AuctionApplicationService;
 import com.online.auction.system.auction.service.domain.ports.output.repository.AuctionRepository;
@@ -9,9 +10,12 @@ import com.online.auction.system.auction.service.domain.ports.output.repository.
 import com.online.auction.system.auction.system.domain.entity.Auction;
 import com.online.auction.system.auction.system.domain.entity.Payment;
 import com.online.auction.system.auction.system.domain.entity.User;
+import com.online.auction.system.common.domain.valueobject.AuctionId;
+import com.online.auction.system.common.domain.valueobject.AuctionStatus;
 import com.online.auction.system.common.domain.valueobject.PaymentId;
 import com.online.auction.system.common.domain.valueobject.UserId;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +24,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -73,12 +78,20 @@ public class AuctionApplicationServiceTest {
                 .build();
 
         Auction auction = auctionDataMapper.createAuctionCommandToAuction(createAuctionCommand, PAYMENT_ID);
+        auction.setId(new AuctionId(AUCTION_ID));
 
         when(userRepository.findUser(USER_ID)).thenReturn(Optional.of(user));
         when(paymentRepository.findPayment(PAYMENT_ID)).thenReturn(Optional.of(paymentResponse));
 
         when(auctionRepository.save(any(Auction.class))).thenReturn(auction);
 
+    }
+
+    @Test
+    public void testCreateAuction() {
+        CreateAuctionResponse createAuctionResponse = auctionApplicationService.createAuction(createAuctionCommand);
+        assertEquals(AuctionStatus.ACTIVE, createAuctionResponse.getAuctionStatus());
+        assertEquals("Auction created successfully", createAuctionResponse.getMessage());
     }
 
 }

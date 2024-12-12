@@ -104,7 +104,7 @@ public class Auction extends AggregateRoot<AuctionId> {
     }
 
     private void validateInitialAuction() {
-        if (auctionStatus != null || getId() == null) {
+        if (auctionStatus != null || getId() != null) {
             throw new AuctionDomainException("Auction is not in correct state for initialization");
         }
     }

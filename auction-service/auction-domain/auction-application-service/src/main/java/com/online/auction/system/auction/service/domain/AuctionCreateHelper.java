@@ -13,12 +13,14 @@ import com.online.auction.system.auction.system.domain.event.AuctionCreatedEvent
 import com.online.auction.system.auction.system.domain.exception.AuctionDomainException;
 import com.online.auction.system.common.domain.valueobject.PaymentId;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
+@Component
 public class AuctionCreateHelper {
     private final AuctionDomainService auctionDomainService;
     private final AuctionRepository auctionRepository;
@@ -68,6 +70,7 @@ public class AuctionCreateHelper {
 
     private Auction saveAuction(Auction auction) {
         Auction savedAuction = auctionRepository.save(auction);
+
         if (savedAuction == null) {
             log.error("Could not save auction whit id: {}", auction.getId().getValue());
             throw new AuctionDomainException("Could not save the Auction!");

@@ -1,9 +1,7 @@
 package com.online.auction.system.auction.service.domain;
 
 import com.online.auction.system.auction.service.domain.dto.create.PlaceAuctionBidCommand;
-import com.online.auction.system.auction.service.domain.mapper.AuctionDataMapper;
 import com.online.auction.system.auction.service.domain.ports.output.repository.AuctionRepository;
-import com.online.auction.system.auction.service.domain.ports.output.repository.PaymentRepository;
 import com.online.auction.system.auction.service.domain.ports.output.repository.UserRepository;
 import com.online.auction.system.auction.system.domain.AuctionDomainService;
 import com.online.auction.system.auction.system.domain.entity.Auction;
@@ -12,12 +10,14 @@ import com.online.auction.system.auction.system.domain.event.AuctionBidPlacedEve
 import com.online.auction.system.auction.system.domain.exception.AuctionDomainException;
 import com.online.auction.system.common.domain.valueobject.Money;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
+@Component
 public class AuctionPlaceBidHelper {
 
     private final AuctionDomainService auctionDomainService;
