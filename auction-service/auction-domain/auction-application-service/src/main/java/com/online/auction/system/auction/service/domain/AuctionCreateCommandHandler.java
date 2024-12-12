@@ -31,7 +31,7 @@ public class AuctionCreateCommandHandler {
         AuctionCreatedEvent auctionCreatedEvent = auctionCreateHelper.persistAuction(createAuctionCommand);
         log.info("Auction is created whit id: {} " ,auctionCreatedEvent.getAuction().getId());
         auctionCreatedMessageRequestMessagePublisher.publish(auctionCreatedEvent);
-        return auctionDataMapper.auctionToCreateAuctionResponse(auctionCreatedEvent.getAuction());
+        return auctionDataMapper.auctionToCreateAuctionResponse(auctionCreatedEvent.getAuction(),"Auction created successfully");
     }
 
 

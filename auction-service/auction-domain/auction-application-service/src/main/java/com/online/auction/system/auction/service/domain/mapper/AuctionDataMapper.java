@@ -25,10 +25,10 @@ public class AuctionDataMapper {
                 .build();
     }
 
-    public CreateAuctionResponse auctionToCreateAuctionResponse(Auction auction) {
+    public CreateAuctionResponse auctionToCreateAuctionResponse(Auction auction,String message) {
         return CreateAuctionResponse.builder()
                 .auctionStatus(auction.getAuctionStatus())
-                .message("Create auction successfully")
+                .message(message)
                 .build();
     }
 

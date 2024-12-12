@@ -52,7 +52,7 @@ public class AuctionCreateHelper {
     private Payment checkPayment(UUID paymentId) {
 
         //TODO create logic for initial payment
-        return Payment.Builder.builder()
+        return Payment.builder()
                 .paymentId(new PaymentId(UUID.randomUUID()))
                 .completed(true)
                 .build();
