@@ -52,6 +52,7 @@ public class Auction extends AggregateRoot<AuctionId> {
         validateBid(bid);
         bid();
         highestBid = bid;
+        auctionStatus = AuctionStatus.PENDING;
     }
 
     public void bid() {

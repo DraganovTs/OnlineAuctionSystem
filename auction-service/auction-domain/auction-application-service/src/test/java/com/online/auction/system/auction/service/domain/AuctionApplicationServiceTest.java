@@ -2,6 +2,8 @@ package com.online.auction.system.auction.service.domain;
 
 import com.online.auction.system.auction.service.domain.dto.create.CreateAuctionCommand;
 import com.online.auction.system.auction.service.domain.dto.create.CreateAuctionResponse;
+import com.online.auction.system.auction.service.domain.dto.create.PlaceAuctionBidCommand;
+import com.online.auction.system.auction.service.domain.dto.create.PlaceAuctionBidResponse;
 import com.online.auction.system.auction.service.domain.mapper.AuctionDataMapper;
 import com.online.auction.system.auction.service.domain.ports.input.service.AuctionApplicationService;
 import com.online.auction.system.auction.service.domain.ports.output.repository.AuctionRepository;
@@ -10,6 +12,7 @@ import com.online.auction.system.auction.service.domain.ports.output.repository.
 import com.online.auction.system.auction.system.domain.entity.Auction;
 import com.online.auction.system.auction.system.domain.entity.Payment;
 import com.online.auction.system.auction.system.domain.entity.User;
+import com.online.auction.system.auction.system.domain.exception.AuctionDomainException;
 import com.online.auction.system.common.domain.valueobject.AuctionId;
 import com.online.auction.system.common.domain.valueobject.AuctionStatus;
 import com.online.auction.system.common.domain.valueobject.PaymentId;
@@ -25,6 +28,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -45,6 +49,8 @@ public class AuctionApplicationServiceTest {
 
     private CreateAuctionCommand createAuctionCommand;
     private CreateAuctionCommand createAuctionCommandWrongStartingPrice;
+    private PlaceAuctionBidCommand placeAuctionBidCommand;
+    private PlaceAuctionBidCommand placeAuctionBidCommandWrongStartingPrice;
     private final UUID USER_ID = UUID.fromString("d215b5f8-0249-4dc5-89a3-51fd148cfb41");
     private final UUID PAYMENT_ID = UUID.fromString("d215b5f8-0249-4dc5-89a3-51fd148cfb42");
     private final UUID AUCTION_ID = UUID.fromString("d215b5f8-0249-4dc5-89a3-51fd148cfb43");
@@ -92,6 +98,21 @@ public class AuctionApplicationServiceTest {
         CreateAuctionResponse createAuctionResponse = auctionApplicationService.createAuction(createAuctionCommand);
         assertEquals(AuctionStatus.ACTIVE, createAuctionResponse.getAuctionStatus());
         assertEquals("Auction created successfully", createAuctionResponse.getMessage());
+    }
+
+
+    @Test
+    public void testCreateAuctionWhitWrongPrice() {
+        AuctionDomainException auctionDomainException = assertThrows(AuctionDomainException.class,
+                () -> auctionApplicationService.createAuction(createAuctionCommandWrongStartingPrice));
+
+        assertEquals("Auction start price must be greater than zero", auctionDomainException.getMessage());
+    }
+
+    @Test
+    public void testPlaceBid(){
+        PlaceAuctionBidResponse placeAuctionBidResponse = auctionApplicationService.placeAuctionBid(placeAuctionBid);
+
     }
 
 }
