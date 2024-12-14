@@ -47,4 +47,9 @@ public class Money {
     private BigDecimal setScale(BigDecimal input) {
         return input.setScale(2, RoundingMode.HALF_EVEN);
     }
+
+    @Override
+    public String toString() {
+        return amount != null ? amount.toString() : "null";
+    }
 }

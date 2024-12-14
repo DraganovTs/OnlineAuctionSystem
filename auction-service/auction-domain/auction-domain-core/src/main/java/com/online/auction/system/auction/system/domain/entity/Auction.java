@@ -117,10 +117,11 @@ public class Auction extends AggregateRoot<AuctionId> {
     }
 
     private void validateBid(Money bid) {
-        if (bid == null || !bid.isGreaterThanZero() || startPrice.isGreaterThan(bid) || highestBid.isGreaterThan(bid)) {
-            throw new AuctionDomainException("Auction bid must be greater than zero");
+        if (bid == null || !bid.isGreaterThanZero() || !bid.isGreaterThan(startPrice) || !bid.isGreaterThan(highestBid)) {
+            throw new AuctionDomainException("Auction bid must be greater than auction starting price");
         }
     }
+
 
     public PaymentId getPaymentId() {
         return paymentId;

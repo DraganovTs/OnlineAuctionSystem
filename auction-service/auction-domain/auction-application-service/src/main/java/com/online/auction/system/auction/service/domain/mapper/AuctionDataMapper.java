@@ -33,10 +33,10 @@ public class AuctionDataMapper {
     }
 
 
-    public PlaceAuctionBidResponse auctionToPlaceAuctionBidResponse(Auction auction) {
+    public PlaceAuctionBidResponse auctionToPlaceAuctionBidResponse(Auction auction,String message) {
         return PlaceAuctionBidResponse.builder()
-                .title(auction.getTitle())
-                .message("Place auction bid successfully")
+                .auctionStatus(auction.getAuctionStatus())
+                .message(message)
                 .failureMessages(auction.getFailureMessages())
                 .build();
     }

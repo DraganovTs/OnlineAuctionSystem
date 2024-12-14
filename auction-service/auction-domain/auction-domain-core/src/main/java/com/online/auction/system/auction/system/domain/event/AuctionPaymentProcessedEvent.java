@@ -1,7 +1,6 @@
 package com.online.auction.system.auction.system.domain.event;
 
 import com.online.auction.system.auction.system.domain.entity.Auction;
-import com.online.auction.system.common.domain.event.DomainEvent;
 
 import java.time.LocalDateTime;
 

@@ -26,6 +26,6 @@ public class AuctionPlaceBidCommandHandler {
         AuctionBidPlacedEvent auctionBidPlacedEvent = auctionPlaceBidHelper.persistAuction(placeAuctionBidCommand);
         log.info("Place bid for auction whit id: {}", auctionBidPlacedEvent.getAuction().getId());
         bidCreatedPaymentRequestMessagePublisher.publish(auctionBidPlacedEvent);
-        return auctionDataMapper.auctionToPlaceAuctionBidResponse(auctionBidPlacedEvent.getAuction());
+        return auctionDataMapper.auctionToPlaceAuctionBidResponse(auctionBidPlacedEvent.getAuction(),"Auction bid placed successfully");
     }
 }

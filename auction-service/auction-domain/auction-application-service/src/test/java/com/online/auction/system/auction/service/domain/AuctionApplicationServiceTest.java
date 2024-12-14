@@ -13,10 +13,7 @@ import com.online.auction.system.auction.system.domain.entity.Auction;
 import com.online.auction.system.auction.system.domain.entity.Payment;
 import com.online.auction.system.auction.system.domain.entity.User;
 import com.online.auction.system.auction.system.domain.exception.AuctionDomainException;
-import com.online.auction.system.common.domain.valueobject.AuctionId;
-import com.online.auction.system.common.domain.valueobject.AuctionStatus;
-import com.online.auction.system.common.domain.valueobject.PaymentId;
-import com.online.auction.system.common.domain.valueobject.UserId;
+import com.online.auction.system.common.domain.valueobject.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -50,11 +47,13 @@ public class AuctionApplicationServiceTest {
     private CreateAuctionCommand createAuctionCommand;
     private CreateAuctionCommand createAuctionCommandWrongStartingPrice;
     private PlaceAuctionBidCommand placeAuctionBidCommand;
-    private PlaceAuctionBidCommand placeAuctionBidCommandWrongStartingPrice;
+    private PlaceAuctionBidCommand placeAuctionBidCommandWrongEqualBidThanStartingPrice;
+    private PlaceAuctionBidCommand placeAuctionBidCommandWrongBidEqualToZero;
     private final UUID USER_ID = UUID.fromString("d215b5f8-0249-4dc5-89a3-51fd148cfb41");
     private final UUID PAYMENT_ID = UUID.fromString("d215b5f8-0249-4dc5-89a3-51fd148cfb42");
     private final UUID AUCTION_ID = UUID.fromString("d215b5f8-0249-4dc5-89a3-51fd148cfb43");
     private final BigDecimal STARTING_PRICE = new BigDecimal("200");
+    private final BigDecimal FIRST_BID_CORRECT = new BigDecimal("300");
     private final BigDecimal WRONG_STARTING_PRICE = new BigDecimal("0");
 
     @BeforeAll
@@ -75,6 +74,24 @@ public class AuctionApplicationServiceTest {
                 .description("TEST_AUCTION_DESCRIPTION")
                 .build();
 
+        placeAuctionBidCommand = PlaceAuctionBidCommand.builder()
+                .auctionId(AUCTION_ID)
+                .userId(USER_ID)
+                .bid(FIRST_BID_CORRECT)
+                .build();
+
+        placeAuctionBidCommandWrongEqualBidThanStartingPrice = PlaceAuctionBidCommand.builder()
+                .auctionId(AUCTION_ID)
+                .userId(USER_ID)
+                .bid(STARTING_PRICE)
+                .build();
+
+        placeAuctionBidCommandWrongBidEqualToZero = PlaceAuctionBidCommand.builder()
+                .auctionId(AUCTION_ID)
+                .userId(USER_ID)
+                .bid(WRONG_STARTING_PRICE)
+                .build();
+
         User user = new User();
         user.setId(new UserId(USER_ID));
 
@@ -86,10 +103,22 @@ public class AuctionApplicationServiceTest {
         Auction auction = auctionDataMapper.createAuctionCommandToAuction(createAuctionCommand, PAYMENT_ID);
         auction.setId(new AuctionId(AUCTION_ID));
 
+        Auction existingAuction = Auction.builder()
+                .auctionId(new AuctionId(AUCTION_ID))
+                .auctionStatus(AuctionStatus.ACTIVE)
+                .title("TEST_AUCTION_TITLE")
+                .description("TEST_AUCTION_DESCRIPTION")
+                .startPrice(new Money(STARTING_PRICE))
+                .paymentId(new PaymentId(PAYMENT_ID))
+                .userId(new UserId(USER_ID))
+                .highestBid(new Money(STARTING_PRICE))
+                .build();
+
         when(userRepository.findUser(USER_ID)).thenReturn(Optional.of(user));
         when(paymentRepository.findPayment(PAYMENT_ID)).thenReturn(Optional.of(paymentResponse));
 
         when(auctionRepository.save(any(Auction.class))).thenReturn(auction);
+        when(auctionRepository.findById(any(UUID.class))).thenReturn(Optional.of(existingAuction));
 
     }
 
@@ -110,8 +139,27 @@ public class AuctionApplicationServiceTest {
     }
 
     @Test
-    public void testPlaceBid(){
-        PlaceAuctionBidResponse placeAuctionBidResponse = auctionApplicationService.placeAuctionBid(placeAuctionBid);
+    public void testPlaceBid() {
+        PlaceAuctionBidResponse placeAuctionBidResponse = auctionApplicationService.placeAuctionBid(placeAuctionBidCommand);
+        assertEquals(AuctionStatus.PENDING, placeAuctionBidResponse.getAuctionStatus());
+        assertEquals("Auction bid placed successfully", placeAuctionBidResponse.getMessage());
+    }
+
+    @Test
+    public void testPlaceBidWrongEqualBidThanStartingPrice() {
+        AuctionDomainException auctionDomainException = assertThrows(AuctionDomainException.class,
+                () -> auctionApplicationService.placeAuctionBid(placeAuctionBidCommandWrongEqualBidThanStartingPrice));
+
+        assertEquals("Auction bid must be greater than auction starting price", auctionDomainException.getMessage());
+
+    }
+
+    @Test
+    public void testPlaceBidWrongEqualToZero(){
+        AuctionDomainException auctionDomainException = assertThrows(AuctionDomainException.class,
+                () -> auctionApplicationService.placeAuctionBid(placeAuctionBidCommandWrongBidEqualToZero));
+
+        assertEquals("Auction bid must be greater than auction starting price", auctionDomainException.getMessage());
 
     }
 
