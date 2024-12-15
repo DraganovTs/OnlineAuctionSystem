@@ -1,0 +1,26 @@
+services:
+  init-kafka:
+    image: 'bitnami/kafka:latest'
+    entrypoint: [ '/bin/sh','-c' ]
+    command: |
+      "
+      # block until kafka is reachable
+      kafka-topics --bootstrap-server kafka-1:9091 --list
+      
+      echo -e 'Deleting kafka topics'
+      kafka-topics --bootstrap-server kafka-1:9091 --topic create-auction-request --delete --if-exist
+      kafka-topics --bootstrap-server kafka-1:9091 --topic create-auction-response --delete --if-exist
+      kafka-topics --bootstrap-server kafka-1:9091 --topic bid-auction-request --delete --if-exist
+      kafka-topics --bootstrap-server kafka-1:9091 --topic bid-auction-response --delete --if-exist
+      
+      echo -e 'Creating kafka topics'
+      kafka-topics --bootstrap-server kafka-1:9091 --create --if-not-exist --topic create-auction-request  --replication-factor 3 --partition 3
+      kafka-topics --bootstrap-server kafka-1:9091 --create --if-not-exist --topic create-auction-response  --replication-factor 3 --partition 3
+      kafka-topics --bootstrap-server kafka-1:9091 --create --if-not-exist --bid-auction-request  --replication-factor 3 --partition 3
+      kafka-topics --bootstrap-server kafka-1:9091 --create --if-not-exist --bid-auction-response  --replication-factor 3 --partition 3
+      
+      echo -e 'Successfully created the fallowing topics:'
+      kafka-topics --bootstrap-server kafka-1:9091 --list
+      "
+networks:
+  online-auction-network:

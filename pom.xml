@@ -19,6 +19,7 @@
     <modules>
         <module>auction-service</module>
         <module>common</module>
+        <module>infrastructure</module>
     </modules>
 
     <properties>
