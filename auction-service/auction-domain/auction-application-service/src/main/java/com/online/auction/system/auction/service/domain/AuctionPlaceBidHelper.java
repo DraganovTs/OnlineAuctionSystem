@@ -8,6 +8,7 @@ import com.online.auction.system.auction.system.domain.entity.Auction;
 import com.online.auction.system.auction.system.domain.entity.User;
 import com.online.auction.system.auction.system.domain.event.AuctionBidPlacedEvent;
 import com.online.auction.system.auction.system.domain.exception.AuctionDomainException;
+import com.online.auction.system.auction.system.domain.exception.AuctionNotFoundException;
 import com.online.auction.system.common.domain.valueobject.Money;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -45,7 +46,7 @@ public class AuctionPlaceBidHelper {
     private Auction checkAuction(UUID auctionId) {
         Optional<Auction> optionalAuction = auctionRepository.findById(auctionId);
         if (optionalAuction.isEmpty()) {
-            throw new AuctionDomainException("Auction id " + auctionId + " not found");
+            throw new AuctionNotFoundException("Auction id " + auctionId + " not found");
         }
         return optionalAuction.get();
     }
