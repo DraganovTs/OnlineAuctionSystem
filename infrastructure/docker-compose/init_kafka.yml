@@ -1,26 +1,30 @@
 services:
   init-kafka:
     image: 'bitnami/kafka:latest'
-    entrypoint: [ '/bin/sh','-c' ]
+    entrypoint: [ '/bin/sh', '-c' ]
     command: |
       "
       # block until kafka is reachable
-      kafka-topics --bootstrap-server kafka-1:9091 --list
-      
+      /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server kafka-1:9192 --list
+
       echo -e 'Deleting kafka topics'
-      kafka-topics --bootstrap-server kafka-1:9091 --topic create-auction-request --delete --if-exist
-      kafka-topics --bootstrap-server kafka-1:9091 --topic create-auction-response --delete --if-exist
-      kafka-topics --bootstrap-server kafka-1:9091 --topic bid-auction-request --delete --if-exist
-      kafka-topics --bootstrap-server kafka-1:9091 --topic bid-auction-response --delete --if-exist
-      
+      /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server kafka-1:9192 --topic create-auction-request --delete --if-exists
+      /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server kafka-1:9192 --topic create-auction-response --delete --if-exists
+      /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server kafka-1:9192 --topic bid-auction-request --delete --if-exists
+      /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server kafka-1:9192 --topic bid-auction-response --delete --if-exists
+
       echo -e 'Creating kafka topics'
-      kafka-topics --bootstrap-server kafka-1:9091 --create --if-not-exist --topic create-auction-request  --replication-factor 3 --partition 3
-      kafka-topics --bootstrap-server kafka-1:9091 --create --if-not-exist --topic create-auction-response  --replication-factor 3 --partition 3
-      kafka-topics --bootstrap-server kafka-1:9091 --create --if-not-exist --bid-auction-request  --replication-factor 3 --partition 3
-      kafka-topics --bootstrap-server kafka-1:9091 --create --if-not-exist --bid-auction-response  --replication-factor 3 --partition 3
-      
-      echo -e 'Successfully created the fallowing topics:'
-      kafka-topics --bootstrap-server kafka-1:9091 --list
+      /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server kafka-1:9192 --create --if-not-exists --topic create-auction-request --replication-factor 3 --partitions 3
+      /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server kafka-1:9192 --create --if-not-exists --topic create-auction-response --replication-factor 3 --partitions 3
+      /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server kafka-1:9192 --create --if-not-exists --topic bid-auction-request --replication-factor 3 --partitions 3
+      /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server kafka-1:9192 --create --if-not-exists --topic bid-auction-response --replication-factor 3 --partitions 3
+
+      echo -e 'Successfully created the following topics:'
+      /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server kafka-1:9192 --list
       "
+    networks:
+      - online-auction-network
+
 networks:
   online-auction-network:
+    driver: bridge

@@ -8,8 +8,8 @@ services:
       - KAFKA_CFG_PROCESS_ROLES=broker,controller
       - KAFKA_KRAFT_CLUSTER_ID=r4zt_wrqTRuT7W2NJsB_GA
       # Listeners
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9192,CONTROLLER://:9094,EXTERNAL://:9091
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-1:9192,EXTERNAL://localhost:9091
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://0.0.0.0:9192,CONTROLLER://0.0.0.0:9094,EXTERNAL://0.0.0.0:9091
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-1:9192,EXTERNAL://kafka-1:9091
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
@@ -17,9 +17,9 @@ services:
     ports:
       - 9091:9091
     volumes:
-      - ../kafka-volumes/server-1:/bitnami/kafka
+      - ./kafka-volumes/server-1:/bitnami/kafka
     networks:
-      online-auction-network:
+      - online-auction-network
 
   kafka-2:
     image: 'bitnami/kafka:latest'
@@ -30,8 +30,8 @@ services:
       - KAFKA_CFG_PROCESS_ROLES=broker,controller
       - KAFKA_KRAFT_CLUSTER_ID=r4zt_wrqTRuT7W2NJsB_GA
       # Listeners
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9192,CONTROLLER://:9094,EXTERNAL://:9092
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-2:9192,EXTERNAL://localhost:9092
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://0.0.0.0:9192,CONTROLLER://0.0.0.0:9094,EXTERNAL://0.0.0.0:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-2:9192,EXTERNAL://kafka-2:9092
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
@@ -39,9 +39,9 @@ services:
     ports:
       - 9092:9092
     volumes:
-      - ../kafka-volumes/server-2:/bitnami/kafka
+      - ./kafka-volumes/server-2:/bitnami/kafka
     networks:
-      online-auction-network:
+      - online-auction-network
 
   kafka-3:
     image: 'bitnami/kafka:latest'
@@ -52,8 +52,8 @@ services:
       - KAFKA_CFG_PROCESS_ROLES=broker,controller
       - KAFKA_KRAFT_CLUSTER_ID=r4zt_wrqTRuT7W2NJsB_GA
       # Listeners
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9192,CONTROLLER://:9094,EXTERNAL://:9093
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-3:9192,EXTERNAL://localhost:9093
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://0.0.0.0:9192,CONTROLLER://0.0.0.0:9094,EXTERNAL://0.0.0.0:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-3:9192,EXTERNAL://kafka-3:9093
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
@@ -61,10 +61,9 @@ services:
     ports:
       - 9093:9093
     volumes:
-      - ../kafka-volumes/server-3:/bitnami/kafka
+      - ./kafka-volumes/server-3:/bitnami/kafka
     networks:
-      online-auction-network:
-
+      - online-auction-network
 
 networks:
   online-auction-network:
