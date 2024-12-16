@@ -27,6 +27,7 @@ public class Auction extends AggregateRoot<AuctionId> {
         paymentId = builder.paymentId;
         userId = builder.userId;
         title = builder.title;
+        startTime =builder.startTime;
         description = builder.description;
         startPrice = builder.startPrice;
         auctionStatus = builder.auctionStatus;
@@ -139,6 +140,10 @@ public class Auction extends AggregateRoot<AuctionId> {
         return description;
     }
 
+    public Money getStartPrice() {
+        return startPrice;
+    }
+
     public LocalDateTime getStartTime() {
         return startTime;
     }
@@ -159,7 +164,6 @@ public class Auction extends AggregateRoot<AuctionId> {
         return endTime;
     }
 
-
     public static Builder builder() {
         return new Builder();
     }
@@ -171,6 +175,7 @@ public class Auction extends AggregateRoot<AuctionId> {
         private String title;
         private String description;
         private Money startPrice;
+        private LocalDateTime startTime;
         private AuctionStatus auctionStatus;
         private Money highestBid;
         private List<String> FailureMessages;
@@ -207,6 +212,11 @@ public class Auction extends AggregateRoot<AuctionId> {
 
         public Builder startPrice(Money val) {
             startPrice = val;
+            return this;
+        }
+
+        public Builder startTime(LocalDateTime val){
+            startTime = val;
             return this;
         }
 
