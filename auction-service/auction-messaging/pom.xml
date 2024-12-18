@@ -16,6 +16,18 @@
             <groupId>com.online.auction</groupId>
             <artifactId>auction-application-service</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.online.auction</groupId>
+            <artifactId>kafka-producer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.online.auction</groupId>
+            <artifactId>kafka-consumer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.online.auction</groupId>
+            <artifactId>kafka-model</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
