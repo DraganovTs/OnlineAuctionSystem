@@ -8,4 +8,6 @@ import java.util.UUID;
 public interface PaymentRepository {
 
    Optional<Payment> findPayment(UUID paymentId);
+
+   Payment savePayment(Payment payment);
 }
