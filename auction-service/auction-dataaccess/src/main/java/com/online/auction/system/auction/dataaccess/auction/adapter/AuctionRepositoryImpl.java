@@ -4,10 +4,12 @@ import com.online.auction.system.auction.dataaccess.auction.mapper.AuctionDataAc
 import com.online.auction.system.auction.dataaccess.auction.repository.AuctionJpaRepository;
 import com.online.auction.system.auction.service.domain.ports.output.repository.AuctionRepository;
 import com.online.auction.system.auction.system.domain.entity.Auction;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.UUID;
 
+@Component
 public class AuctionRepositoryImpl implements AuctionRepository {
 
 

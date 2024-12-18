@@ -4,10 +4,12 @@ import com.online.auction.system.auction.dataaccess.payment.mapper.PaymentDataAc
 import com.online.auction.system.auction.dataaccess.payment.repository.PaymentJpaRepository;
 import com.online.auction.system.auction.service.domain.ports.output.repository.PaymentRepository;
 import com.online.auction.system.auction.system.domain.entity.Payment;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.UUID;
 
+@Component
 public class PaymentRepositoryImpl implements PaymentRepository {
 
     private final PaymentJpaRepository paymentJpaRepository;
