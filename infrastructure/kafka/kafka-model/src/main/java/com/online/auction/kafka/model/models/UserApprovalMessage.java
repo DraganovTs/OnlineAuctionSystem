@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 @Data
 @AllArgsConstructor
@@ -20,7 +21,7 @@ public class UserApprovalMessage {
     private String paymentId;
     private String customerId;
     private BigDecimal price;
-    private Instant createdAt;
+    private LocalDateTime createdAt;
     private String paymentStatus;
     private List<String> failureMessages;
 }
